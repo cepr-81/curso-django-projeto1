@@ -1,10 +1,9 @@
 from django.http import HttpResponse
-
-# from django.shortcuts import render
+from django.shortcuts import render
 
 
 def home(request):
-    return HttpResponse("HOME")
+    return render(request, 'global/home.html')
 
 
 def sobre(request):
