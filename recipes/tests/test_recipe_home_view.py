@@ -51,3 +51,31 @@ class RecipeHomeViewTest(RecipeTestBase):
             'No recipes yet! :(',
             response.content.decode('utf-8')
         )
+
+    def test_per_page_quantity_are_correct(self):
+
+        for i in range(0, 20):
+            slug = 'slug-' + str(i)
+            title = 'Titulo-' + str(i)
+            writer = 'Escritor-' + str(i)
+            author = {'username': writer}
+            self.make_recipe(title=title, slug=slug, author_data=author)
+
+        response = self.client.get(reverse('recipes:home'))
+
+        page_itens = response.context['recipes'].object_list
+        self.assertEqual(len(page_itens), 9)
+
+    def test_except_value_error_on_make_pagination_function(self):
+
+        for i in range(0, 20):
+            slug = 'slug-' + str(i)
+            title = 'Titulo-' + str(i)
+            writer = 'Escritor-' + str(i)
+            author = {'username': writer}
+            self.make_recipe(title=title, slug=slug, author_data=author)
+
+        response = self.client.get(reverse('recipes:home')+'?page=a')
+
+        self.assertEqual(
+            response.context['pagination_range']['current_page'], 1)
