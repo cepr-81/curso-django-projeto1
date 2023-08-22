@@ -49,12 +49,14 @@ class RegisterForm(forms.ModelForm):
             'one lowercase letter and one number. The minimal length '
             'should be at least 8 characters.'
         ),
-        validators=[strong_password]
+        validators=[strong_password],
+        label='Password'
     )
 
     password2 = forms.CharField(
         required=True,
-        widget=forms.PasswordInput()
+        widget=forms.PasswordInput(),
+        label='Confirm Password'
     )
 
     class Meta:
@@ -65,14 +67,12 @@ class RegisterForm(forms.ModelForm):
                   'email',
                   'password',
                   ]
-        # exclude = ['first_name']
 
         labels = {
             'username': 'Username',
             'first_name': 'First Name',
             'last_name': 'Last Name',
             'email': 'E-mail',
-            'password': 'Password',
         }
 
         help_texts = {
@@ -84,17 +84,6 @@ class RegisterForm(forms.ModelForm):
                 'required': 'This field can not be empty.',
             }
         }
-
-    def clean_password(self):
-        data = self.cleaned_data.get('password')
-
-        if 'atenção' in data:
-            raise ValidationError(
-                'Não utilize a palavra "atenção" como senha',
-                code='invalid',
-                params={'value': 'atenção'}
-            )
-        return data
 
     def clean(self):
         cleaned_data = super().clean()

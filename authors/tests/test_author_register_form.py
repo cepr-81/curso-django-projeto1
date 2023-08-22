@@ -1,4 +1,6 @@
-from django.test import TestCase
+from unittest import TestCase
+
+# from django.test import TestCase
 from parameterized import parameterized
 
 from authors.forms import RegisterForm
@@ -30,4 +32,17 @@ class AuthorRegisterFormUnitTest(TestCase):
     def test_fields_help_text(self, field, needed):
         form = RegisterForm()
         current = form[field].field.help_text
+        self.assertEqual(needed, current)
+
+    @parameterized.expand([
+        ('username', 'Username'),
+        ('first_name', 'First Name'),
+        ('last_name', 'Last Name'),
+        ('email', 'E-mail'),
+        ('password', 'Password'),
+        ('password2', 'Confirm Password'),
+    ])
+    def test_fields_labels(self, field, needed):
+        form = RegisterForm()
+        current = form[field].field.label
         self.assertEqual(needed, current)
