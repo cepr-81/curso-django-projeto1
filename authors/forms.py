@@ -35,14 +35,41 @@ class RegisterForm(forms.ModelForm):
         add_placeholder(self.fields['last_name'], 'Ex.: Doe')
         add_placeholder(self.fields['password'], 'Type your password')
         add_placeholder(self.fields['password2'], 'Repeat your password')
-        add_attr(self.fields['first_name'], 'required', True)
-        add_attr(self.fields['last_name'], 'required', True)
+
+    username = forms.CharField(
+        error_messages={
+            'required': 'This field can not be empty.',
+            'min_length': 'Username must have at least 4 characters.',
+            'max_length': 'Username must have 150 characters or less.'},
+        label='Username',
+        help_text=(
+            'Username must have letters, numbers or one of those e @.+-_. '
+            'The length should be between 4 and 150 characters.'),
+        min_length=4,
+        max_length=150,
+    )
+
+    first_name = forms.CharField(
+        error_messages={'required': 'Write your first name.'},
+        label='First Name',
+    )
+
+    last_name = forms.CharField(
+        error_messages={'required': 'Write your last name.'},
+        label='Last Name',
+    )
+
+    email = forms.EmailField(
+        error_messages={'required': 'E-mail is required.'},
+        label='E-mail',
+        help_text='Type a valid e-mail.',
+    )
 
     password = forms.CharField(
         required=True,
         widget=forms.PasswordInput(),
         error_messages={
-            'required': 'Password can not be empty'
+            'required': 'Password can not be empty.'
         },
         help_text=(
             'Password must have at least one uppercase letter, '
@@ -56,7 +83,10 @@ class RegisterForm(forms.ModelForm):
     password2 = forms.CharField(
         required=True,
         widget=forms.PasswordInput(),
-        label='Confirm Password'
+        label='Confirm Password',
+        error_messages={
+            'required': 'Please, repeat your password.'
+        },
     )
 
     class Meta:
@@ -67,23 +97,6 @@ class RegisterForm(forms.ModelForm):
                   'email',
                   'password',
                   ]
-
-        labels = {
-            'username': 'Username',
-            'first_name': 'First Name',
-            'last_name': 'Last Name',
-            'email': 'E-mail',
-        }
-
-        help_texts = {
-            'email': 'Type a valid e-mail.'
-        }
-
-        error_messages = {
-            'username': {
-                'required': 'This field can not be empty.',
-            }
-        }
 
     def clean(self):
         cleaned_data = super().clean()
