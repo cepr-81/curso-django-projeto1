@@ -123,3 +123,13 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
         msg = 'Your user was created, please log in.'
         self.assertEqual(
             msg, response.context['messages']._loaded_messages[0].message)
+
+    def test_email_must_be_unique(self):
+        url = reverse('authors:create')
+        self.client.post(url, data=self.form_data, follow=True)
+
+        response = self.client.post(url, data=self.form_data, follow=True)
+
+        msg = 'E-mail already exists'
+        self.assertIn(msg, response.context['form'].errors.get('email'))
+        self.assertIn(msg, response.content.decode('utf-8'))
